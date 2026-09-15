@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# VS Code / PyCharm
+.vscode/
+.idea/
+
+# Output videos
+output_video/
+*.mp4
+
+# Cache
+*.log
+
+# AI model weights (không upload nếu quá nặng)
+*.pt
+*.pth
