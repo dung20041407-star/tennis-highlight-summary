@@ -51,10 +51,6 @@ Ground Truth trong gts/
 
 Mô hình được lưu dưới dạng model_best.pt để sử dụng cho bước suy luận (Inference).
 
-Lưu ý
-
-Bộ dữ liệu gốc (khoảng 2.3 GB) không được đưa lên GitHub do dung lượng lớn. Repository chỉ bao gồm mã nguồn, cấu trúc dữ liệu và các file cần thiết để tái tạo quá trình huấn luyện.
-
 Cách chạy dự án
 Chạy giao diện Web
 python app.py
