@@ -3,9 +3,12 @@ import sys
 import cv2
 import importlib.util
 
+from highlight.event_detector import EventDetector
+from highlight.rally_detector import RallyDetector
+from highlight.video_cutter import VideoCutter
+
 BASE_DIR = os.path.dirname(__file__)
 
-# Load TrackNet
 tracknet_path = os.path.join(BASE_DIR, "TrackNet")
 sys.path.insert(0, tracknet_path)
 
@@ -24,7 +27,6 @@ sys.path.pop(0)
 for name in ["model", "postprocess", "general"]:
     sys.modules.pop(name, None)
 
-# Load Player Detector
 player_path = os.path.join(BASE_DIR, "PlayerDetector")
 sys.path.insert(0, player_path)
 
@@ -39,7 +41,6 @@ infer_player_model = player_infer.infer_player_model
 
 sys.path.pop(0)
 
-# Load TennisCourtDetector
 court_path = os.path.join(BASE_DIR, "TennisCourtDetector")
 sys.path.insert(0, court_path)
 
@@ -57,13 +58,11 @@ sys.path.pop(0)
 for name in ["tracknet", "postprocess", "homography", "utils"]:
     sys.modules.pop(name, None)
 
-# MiniMap (tennis-trace style)
 if BASE_DIR not in sys.path:
     sys.path.insert(0, BASE_DIR)
 
 from minimap import MiniMap
 
-# Paths
 INPUT_DIR = os.path.join(BASE_DIR, "input_video")
 OUTPUT_DIR = os.path.join(BASE_DIR, "output_video")
 
@@ -88,12 +87,12 @@ COURT_MODEL = os.path.join(
 )
 
 video_name = os.path.splitext(video_files[0])[0]
+
 OUTPUT_PATH = os.path.join(
     OUTPUT_DIR,
     f"{video_name}_result.mp4"
 )
 
-# Court line mapping
 COURT_LINES = [
     (0, 1),
     (2, 3),
@@ -108,17 +107,14 @@ COURT_LINES = [
 
 BALL_HISTORY = 6
 
-# Main
 def main():
 
     print("Reading video...")
     frames, fps = read_video(VIDEO_PATH)
 
-    # Ball Detection
     print("Running TrackNet...")
     ball_track = infer_ball_model(frames, BALL_MODEL)
 
-    # Court Detection
     print("Running TennisCourtDetector...")
     court_track = infer_court_model(
         frames,
@@ -127,7 +123,6 @@ def main():
         use_homography=False,
     )
 
-    # Player Detection
     print("Running Player Detector...")
     player_track = infer_player_model(
         frames,
@@ -135,13 +130,54 @@ def main():
         court_track
     )
 
-    # MiniMap
+    print("Detecting bounce events...")
+
+    event_detector = EventDetector(fps)
+
+    bounce_events = event_detector.detect_bounces(
+        ball_track,
+        court_track
+    )
+
+    event_detector.save_events(
+        bounce_events,
+        os.path.join(OUTPUT_DIR, "events.json")
+    )
+
+    print(f"Detected {len(bounce_events)} bounce events.")
+
+    print("Detecting rallies...")
+
+    rally_detector = RallyDetector(fps)
+
+    rallies = rally_detector.detect_rallies(
+        ball_track,
+        court_track
+    )
+
+    print(f"Detected {len(rallies)} rallies.")
+
+    for i, rally in enumerate(rallies, start=1):
+        print(
+            f"Rally {i}: start={rally.start_frame}, "
+            f"end={rally.end_frame}, "
+            f"duration={rally.duration_frames}"
+        )
+
     minimap = MiniMap()
 
-    # Draw
-    print("Drawing output...")
+    h, w = frames[0].shape[:2]
 
-    output_frames = []
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+
+    out = cv2.VideoWriter(
+        OUTPUT_PATH,
+        fourcc,
+        fps,
+        (w, h),
+    )
+
+    print("Drawing output...")
 
     for frame_idx, (frame, court_points, players) in enumerate(
         zip(frames, court_track, player_track)
@@ -149,14 +185,15 @@ def main():
 
         image = frame.copy()
 
-        # ==================================================
-        # Court Lines
-        # ==================================================
         for a, b in COURT_LINES:
 
             if (
-                court_points[a][0] is None
+                court_points[a] is None
+                or court_points[b] is None
+                or court_points[a][0] is None
+                or court_points[a][1] is None
                 or court_points[b][0] is None
+                or court_points[b][1] is None
             ):
                 continue
 
@@ -168,12 +205,10 @@ def main():
                 2,
             )
 
-        # Court Keypoints
+        for idx, point in enumerate(court_points):
 
-            for idx, point in enumerate(court_points):
-
-                if point is None or point[0] is None or point[1] is None:
-                    continue
+            if point is None or point[0] is None or point[1] is None:
+                continue
 
             x, y = map(int, point)
 
@@ -189,7 +224,6 @@ def main():
                 2,
             )
 
-        # Players
         for label, bbox in players.items():
 
             if bbox is None:
@@ -215,7 +249,6 @@ def main():
                 2,
             )
 
-        # Ball Trail
         for i in range(BALL_HISTORY - 1, -1, -1):
 
             idx = frame_idx - i
@@ -244,8 +277,12 @@ def main():
                 -1,
             )
 
-        # MiniMap (tennis-trace homography)
-        if all(court_points[i][0] is not None for i in range(4)):
+        if all(
+            court_points[i] is not None
+            and court_points[i][0] is not None
+            and court_points[i][1] is not None
+            for i in range(4)
+        ):
 
             H = minimap.get_homography(court_points)
 
@@ -258,26 +295,26 @@ def main():
                 ball=ball,
             )
 
-        output_frames.append(image)
-
-    # Save Video
-    print("Saving video...")
-
-    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-
-    h, w = output_frames[0].shape[:2]
-
-    out = cv2.VideoWriter(
-        OUTPUT_PATH,
-        fourcc,
-        fps,
-        (w, h),
-    )
-
-    for frame in output_frames:
-        out.write(frame)
+        out.write(image)
 
     out.release()
+
+    print("Saved edited video:", OUTPUT_PATH)
+
+    print("Cutting rally videos...")
+
+    video_cutter = VideoCutter(fps)
+
+    rally_output_dir = os.path.join(
+        OUTPUT_DIR,
+        "rallies"
+    )
+
+    video_cutter.cut_rallies(
+        OUTPUT_PATH,
+        rallies,
+        rally_output_dir,
+    )
 
     print("Done!")
     print("Output:", OUTPUT_PATH)

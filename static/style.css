@@ -1,0 +1,134 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:#0f172a;
+    color:white;
+    font-family:Segoe UI, sans-serif;
+}
+
+.container{
+    width:90%;
+    margin:auto;
+    padding:30px;
+}
+
+header{
+    margin-bottom:30px;
+}
+
+header h1{
+    font-size:34px;
+}
+
+header p{
+    color:#94a3b8;
+}
+
+.card{
+    background:#1e293b;
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:20px;
+}
+
+.upload-card input{
+    margin-top:15px;
+}
+
+button{
+    margin-top:15px;
+    padding:12px 25px;
+    background:#2563eb;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1d4ed8;
+}
+
+.status-list{
+    margin:20px 0;
+}
+
+.status-item{
+    margin:8px 0;
+    color:#cbd5e1;
+}
+
+.progress-bar{
+    height:14px;
+    background:#334155;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    width:0%;
+    height:100%;
+    background:#22c55e;
+    transition:0.5s;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:2fr 1fr;
+    gap:20px;
+}
+
+video{
+    width:100%;
+    border-radius:12px;
+    background:black;
+}
+
+.summary-box{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.summary-item{
+    background:#334155;
+    padding:15px;
+    border-radius:12px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.rally-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.rally-item{
+    background:#334155;
+    padding:12px;
+    border-radius:10px;
+}
+#runBtn{
+    background:#16a34a;
+    margin-left:10px;
+}
+
+#runBtn:hover{
+    background:#15803d;
+}
+
+.rally-item{
+    background:#334155;
+    padding:12px;
+    border-radius:10px;
+}
+
+.rally-item a{
+    color:#38bdf8;
+    text-decoration:none;
+}

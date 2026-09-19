@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tennis Highlight Summary</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <h1>🎾 Tennis Highlight Summary</h1>
+        <p>AI-based Tennis Rally Detection System</p>
+    </header>
+
+    <!-- Upload Video -->
+    <section class="card upload-card">
+
+        <h2>Upload Match Video</h2>
+
+        <input type="file" id="videoInput" accept="video/*">
+
+        <button id="uploadBtn">Upload Video</button>
+
+        <button id="runBtn">
+            ▶ Run Detection
+        </button>
+
+        <p id="uploadStatus"></p>
+
+    </section>
+
+    <!-- Pipeline -->
+    <section class="card status-card">
+
+        <h2>Processing Pipeline</h2>
+
+        <div class="status-list">
+
+            <div class="status-item">⭕ TrackNet</div>
+            <div class="status-item">⭕ Court Detection</div>
+            <div class="status-item">⭕ Player Detection</div>
+            <div class="status-item">⭕ Bounce Detection</div>
+            <div class="status-item">⭕ Rally Detection</div>
+
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+    </section>
+
+    <!-- Output + Summary -->
+    <section class="grid">
+
+        <div class="card">
+
+            <h2>Output Video</h2>
+
+            <video controls id="outputVideo">
+                Your browser does not support HTML video.
+            </video>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Detection Summary</h2>
+
+            <div class="summary-box">
+
+                <div class="summary-item">
+                    <span>🎯 Bounce Events</span>
+                    <span id="bounceCount">0</span>
+                </div>
+
+                <div class="summary-item">
+                    <span>🏸 Rally Count</span>
+                    <span id="rallyCount">0</span>
+                </div>
+
+                <div class="summary-item">
+                    <span>⏱ Video Duration</span>
+                    <span id="videoDuration">--</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Rally List -->
+    <section class="card">
+
+        <h2>Detected Rally Videos</h2>
+
+        <div id="rallyList" class="rally-list">
+
+            No rally detected yet.
+
+        </div>
+
+    </section>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

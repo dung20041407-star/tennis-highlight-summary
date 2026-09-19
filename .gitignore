@@ -1,25 +1,34 @@
 # Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
 
-# Virtual environment
-.venv/
-venv/
-env/
-
-# VS Code / PyCharm
+# VSCode
 .vscode/
-.idea/
 
-# Output videos
+# Virtual Environment
+venv/
+.env/
+
+# TensorBoard / Training output
+TrackNet/exps/
+runs/
+
+# Dataset (2.3GB) - KHÔNG upload
+TrackNet/datasets/trackNet/images/
+TrackNet/datasets/trackNet/gts/
+
+# Input & output videos - KHÔNG upload
+input_video/
 output_video/
-*.mp4
 
-# Cache
-*.log
+# Flask generated files
+static/uploads/
+static/outputs/
+static/rallies/
 
-# AI model weights (không upload nếu quá nặng)
-*.pt
-*.pth
+# OS
+Thumbs.db
+.DS_Store
+
+# Giữ lại pretrained model
+!TrackNet/model_best.pt
