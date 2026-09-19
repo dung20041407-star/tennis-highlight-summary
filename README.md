@@ -15,16 +15,7 @@ Phát hiện Rally trong trận đấu.
 Sinh MiniMap bằng phép biến đổi Homography.
 Tự động cắt và xuất video highlight.
 Cấu trúc dự án
-TennisSummary/
-├── app.py                     # Giao diện Web (Flask)
-├── main.py                    # Pipeline xử lý video
-├── TrackNet/                  # Module theo dõi bóng
-├── PlayerDetector/            # Module nhận diện người chơi
-├── TennisCourtDetector/       # Module nhận diện sân
-├── minimap/                   # Homography và MiniMap
-├── highlight/                 # Bounce, Rally, Video Cutter
-├── static/
-└── templates/
+
 Quy trình huấn luyện TrackNet
 
 Trong dự án, mô hình TrackNet được chuẩn bị và huấn luyện theo quy trình của repository gốc.
