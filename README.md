@@ -34,6 +34,7 @@ Kết quả tạo ra:
 
 Thư mục gts/.
 Hai file labels_train.csv và labels_val.csv.
+
 3. Huấn luyện mô hình
 
 Thực hiện huấn luyện mô hình bằng:
