@@ -23,7 +23,7 @@ Trong dự án, mô hình TrackNet được chuẩn bị và huấn luyện theo
 1. Chuẩn bị dữ liệu
 Sử dụng bộ dữ liệu TrackNet chính thức gồm 10 trận đấu tennis.
 Tổ chức dữ liệu theo đúng cấu trúc yêu cầu của TrackNet.
-[https://drive.google.com/drive/folders/11r0RUaQHX7I3ANkaYG4jOxXK1OYo01Ut ](https://drive.google.com/drive/folders/1jibXwjpm2syQ3I7ClyIuT1WuGW2_JKRr)
+[https://drive.google.com/drive/folders/11r0RUaQHX7I3ANkaYG4jOxXK1OYo01Ut ]([https://drive.google.com/drive/folders/1jibXwjpm2syQ3I7ClyIuT1WuGW2_JKRr](https://drive.google.com/drive/folders/1nRlaY6vg5jgG3gWHWNdJclobHtIlYKNk))
 Bộ dữ liệu bao gồm ảnh các frame và file nhãn (Label.csv) cho từng clip.
 3. Sinh Ground Truth
 
